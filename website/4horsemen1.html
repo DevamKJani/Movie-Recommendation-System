@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Playing with Movielens</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+<style>
+	@font-face {
+  font-family: 'Product Sans';
+  font-style: normal;
+  font-weight: 100;
+  src: local('Open Sans'), local('OpenSans'), url(https://fonts.gstatic.com/s/productsans/v5/HYvgU2fE2nRJvZ5JFAumwegdm0LZdjqr5-oayXSOefg.woff2) format('woff2');
+}
+
+body {
+	display: flex;
+	background-color: black;
+	background-image: url("image-overlay.png");
+	flex-wrap: wrap;
+	justify-content: center;
+	height: 100vh;
+	align-items: center;
+	color: white;
+	font-family: Product Sans;
+	font-size: 1vw;
+	padding: 20px;
+}
+
+a:link {
+  color: green;
+  background-color: transparent;
+  text-decoration: none;
+}
+
+a:visited {
+  color: #ff6961;
+  background-color: transparent;
+  text-decoration: none;
+}
+
+a:hover {
+  color: red;
+  background-color: transparent;
+  text-decoration: underline;
+}
+
+a:active {
+  color: yellow;
+  background-color: transparent;
+  text-decoration: underline;
+}
+
+</style>
+<body>
+<div class="Container">
+    <div class="row">
+        <div class="col-sm-2"></div>
+        <div class="col-sm-9">
+            <h1 style="text-align: center;"><strong><mark>PLAYING WITH MOVIELENS</mark></strong></h1>
+        </div>
+        <div class="col-sm-2"></div>
+    </div><br><br>
+    <!-- <div class="container">
+        <h4><span style="text-decoration: underline;"><strong>Introduction:</strong></span></h4>
+        <p>We have taken movielens dataset for this project and used Content-based and Collaborative based recommendation and gave results separately for each user</p>
+        <p>&nbsp;</p>
+        <h4><span style="text-decoration: underline;"><strong>Content-Based Recommendation System:</strong></span></h4>
+        <p>Content-based recommender works with the data that is given by the user explicitly, i.e., rating or implicitly, flow from one item to another item. Based on the obtained data from the user, we create a user profile. This user profile helps us to suggest movies (in this case) or books or other items. As the user puts more data into his user profile by giving the rating then the recommendation can do more and more accurately.</p>
+        <p>The concept of TF-IDF (Term Frequency &ndash; Inverse Document Frequency) is used to determine the relative importance of a document/movie.</p>
+        <p>In Movie Recommendation System, we considered the rating greater than 2.5 out of 5.0 has a liked movie and represented it in Binary format as 1, and whichever movies are rated less than 2.5 are considered as disliked movies and given negation value of liked movie, i.e., -1.</p>
+        <p>&nbsp;</p>
+        <p><img src="http://webpages.uncc.edu/~snagiset/2.png" alt="" width="1280" height="250" /></p>
+        <p>&nbsp;</p>
+        <p>From the image above, User 1 liked Star Wars IV, and Interstellar and disliked City of Gold. Therefore the score is given respectively. From the movielens dataset, we got in what genre the movie falls into. From this info, we represent the presence of genre in particular movie by either 0/1.</p>
+        <p>&nbsp;</p>
+        <p><img src="http://webpages.uncc.edu/~snagiset/3.png" alt="" width="1280" height="300" /></p>
+        <p>&nbsp;</p>
+        <p>In the above image, we calculated the normalized score for each genre in each movie. For example, for the movie Interstellar, a total number of attributes is 2 (Fantasy and Drama). We now normalize the score for the genre to 1/sqrt(2) = 0.70710678. DF (Document Frequency) is calculated by taking a total number of a type the particular genre appeared in the dataset. For demonstration purpose, we have taken a total number of movies = 10 of which a number of adventure genre movies are 4. From these DF, we calculate the IDFs, i.e., IDF = log (total number of movies/DF).</p>
+        <p>&nbsp;</p>
+        <p><img src="http://webpages.uncc.edu/~snagiset/4.png" alt="" width="1280" height="300" /></p>
+        <p>&nbsp;</p>
+        <p>In the above image, we found the prediction for User-1 for each movie in the database. The dot product of the movie vector and IDF vector gives us the weighted scores of each movie. These weighted scores are again used for a dot product with the user profile score, this gives us the prediction score each movie in the dataset.</p>
+        <p><strong> Prediction for Movie &ndash; The Matrix &ndash; for User-1 = (0.5*0.39794001*1.07735027) + (0.5*0.30103*1.07735027)+(0.5*0.22184875*1.78445705) + (0.5*0.15490196*0.5)</strong></p>
+        <p>&nbsp;</p>
+        <p><span style="text-decoration: underline;"><strong>Content-Based Recommendation is Good for &ndash; </strong></span></p>
+        <p>Using Content-Based Recommender we can get the movie recommendation just with that particular user&rsquo;s profile. As user himself gives the ratings there is more probability that the user can like similar genre movies.</p>
+        <p>Dataset Limitation - The movielens dataset just have genre information. It would be better if there information about casting information.</p>
+        <p>&nbsp;</p>
+        <p><span style="text-decoration: underline;"><strong>Limitations of Content-Based Recommendation - </strong></span></p>
+        <p>General Limitation what we came across is the case where the user has not watch particular kind of genre. For example, in the last image, we can see that since the user has not watched any drama kind of movie, the prediction for only Drama genre movie is zero.</p>
+        <p>&nbsp;</p>
+        <p><a title="Content-based Recommendation output file" href="contentout.txt" target="_blank">Content-based Recommendation output file</a>&nbsp;</p>
+
+            <p>&nbsp;</p>
+            <h4><span style="text-decoration: underline;"><strong>Collaborative based movie recommendation system:</strong></span></h4>
+            <p>Collaborative filtering (CF) is a popular recommendation algorithm that bases its predictions and recommendations on the ratings or behavior of other users in the system. The fundamental assumption behind this method is that other users&rsquo; opinions can be selected and aggregated in such a way as to provide a reasonable prediction of the active user&rsquo;s preference. Rather than using similarities between users&rsquo; rating behavior to predict preferences, item&ndash; item CF uses similarities between the rating patterns of items. If two items tend to have the same users like and dislike them, then they are similar and users are expected to have similar preferences for similar items.</p>
+            <p>&nbsp;</p>
+            <p><strong>Collaborative based movie recommendation system consists of six jobs:</strong></p>
+            <p>&nbsp;</p>
+        <p><span style="text-decoration: underline;"><strong>User Movie Rating:</strong></span></p>
+        <p>In User Movie Rating job, the ratings.csv file is taken as input in order to create a format such that it consists of records of movies that are watched and rated by user. This step is useful for assessing the user preference. The output format of this job will be &ldquo;userid movieid:rating&rdquo;.</p>
+        <p>&nbsp;</p>
+        <p><span style="text-decoration: underline;"><strong>Movie Movie Pairs:</strong></span></p>
+        <p>The output from User Movie Rating job is considered as input for Movie Movie Pairs job. In this job the movies which are watched together by all users are considered and the number of such occurrences are counted. It gives an idea about the movies that are most commonly watched together. The output format of this will be &ldquo;movieid1:movieid2 count&rdquo;.</p>
+        <p>&nbsp;</p>
+        <p><span style="text-decoration: underline;"><strong>Combining Rating and Similarities:</strong></span></p>
+        <p>The outputs from jobs User Movie Rating and Movie Movie Pairs are considered as inputs for this job. In this job all the movieid are appended to the output of first job and all the userid are appended to output of Movie Movie Pairs job. Then the ratings of first job and count of second job are multiplied in order to get the score, which depicts the movie pairs which many users watched together and gave good ratings. The output format will be &ldquo;movieid1:movieid2:userid score&rdquo;.</p>
+        <p>&nbsp;</p>
+        <p><span style="text-decoration: underline;"><strong>User Preference:</strong></span></p>
+        <p>The output from Combining Rating and Similarities Job is given as input for this job. In this job, the records are sorted based on the user id. If user ids are same, the records are sorted based on movie ids. The output format will be &ldquo;userid movieid,score&rdquo;. This&nbsp;is useful in assessing the user&rsquo;s preference based on the score calculated.</p>
+        <p>&nbsp;</p>
+        <p><span style="text-decoration: underline;"><strong>Eliminating User Watched Movies:</strong></span></p>
+        <p>The output of User Preference job and User Movie Rating job are given as inputs for the job. In this job, the movies which are watched by user are eliminated. So the output of this job consists all the movies that can be recommended to the user.</p>
+        <p>&nbsp;</p>
+        <p><span style="text-decoration: underline;"><strong>Recommendation Of Movies:</strong></span></p>
+        <p>The input for this job will be the output of previous job. In this job the records are sorted based on userids and the score. So the recommendations will be in the order of user&rsquo;s preference i.e., with good ratings and similar genre.</p>
+            <p>&nbsp;</p>
+            <p><span style="text-decoration: underline;"><strong>Collaborative-Based Recommendation is Good for &ndash;</strong></p>
+            <p>Unlike content-based recommendation, we do not come across any zero value predictions. And new genre movies can be recommended to the user.</p>
+            <p>Collaborative Approach does not require much user profile like content-based recommendation approach</p>
+            <p><br /><span style="text-decoration: underline;"><strong>Limitations of Collaborative-Based Recommendation -</strong></p>
+            <p>Collaborative systems are not content aware meaning that information about items are not considered when they produce recommendations. And works slowly when movielens kind of dataset with large data is used.</p>
+            <p><br /><span style="text-decoration: underline;"><strong>Limitations of Both Recommendation -</strong></p>
+            <p>Both the recommendation systems suffer cold-start problem where the user/community is very new to the system/environment when there are no enough information and rating for the movies to process and recommend item.</p>
+            <p>&nbsp;</p>
+            <p><a title="Collaborative-based Recommendation output file" href="collaborativeout.txt" target="_blank">Collaborative-based Recommendation output file</a></p> -->
+            <p>&nbsp;</p>
+        <div class="container">
+            <div class="row">
+                <p style="padding: 10px"></p>
+            </div>
+            <div class="row">
+                <div class="col-sm-4"></div>
+                <div class="col-sm-4">
+                    <input type="file" name="file" id="file">
+                    <br>
+                    User ID: <input type="text" id="myText" value="1" style="color:black;">
+                    <br><br>
+                    <button class="btn btn-danger" onclick="myFunction()">Show Recommendation!</button>
+                    <br><br>
+                    <div id = "myList"></div>
+                </div>
+            </div>
+        </div>
+        <p>&nbsp;</p>
+        <!-- <h3><span style="text-decoration: underline;"><em><strong><a title="readme" href="http://webpages.uncc.edu/~snagiset/readme.txt" target="_blank">Link to Readme File</a></strong></em></span></h3>
+        <p>&nbsp;</p>
+            <h4><span style="text-decoration: underline;"><strong>Technology Used:</strong></span></h4>
+            <p>Hadoop framework and the MapReduce programming model</p>
+            <p>&nbsp;</p>
+            <h4><span style="text-decoration: underline;"><strong>Progress Check:</strong></span></h4>
+            <ul>
+				<li>What we implemented is, Content-based and Collaborative-based Recommendation system for Movies - ✓</li>
+
+				<li><span class="tx">Future aspects - Hybrid model using both the results from Content and Collaborative based recommendation -&nbsp;... (Working on it)</span></li>
+			</ul>
+            <!-- <p>What we implemented is, Content-based and Collaborative-based Recommendation system for Movies - ✓</p>
+            <p><span class="tx">Future aspects - Hybrid model using both the results from Content and Collaborative based recommendation -&nbsp;... (Working on it)</span></p>
+            <p>&nbsp;</p>
+            <h4><span style="text-decoration: underline;"><strong>Work Distribution:</strong></span></h4>
+        <div class="container">&nbsp;</div>
+        <div class="container">We divided the work into tasks/steps (as presented in the collaborative approach section), and each member worked task by task.</div>
+        <div class="container">&nbsp;</div>
+        <ul>
+			<li> Devam K Jani - HADOOP, HDFS, website and report</li>
+			<li> Harsh P Keshruwala - Collaborative-based , and report </li>
+			<li> Jay Patel - Collaborative-based recommendation, Content-based recommendation and report </li>
+			<li> Steeve Nazareth - Content-based recommendation and report </li>
+        </ul>
+        <p>&nbsp;</p>
+        <p>&nbsp;</p>
+        <p>&nbsp;</p> -->
+</div>
+    <script type="text/javascript">
+        var lines;
+        document.getElementById('file').onchange = function(){
+
+            var file = this.files[0];
+            var count = 0;
+
+            var reader = new FileReader();
+            reader.onload = function(progressEvent){
+                lines = this.result.split('\n');
+                for(var line = 0; line < lines.length; line++){
+                    var userid = lines[line].split(',');
+                    if(userid[0] == 2 && count < 5) {
+                        count++;
+                        console.log(userid[1]);
+                    }
+                }
+            };
+            reader.readAsText(file);
+        };
+        function myFunction() {
+            var count = 0;
+            var x = document.getElementById("myText").value;
+            document.getElementById("myList").innerHTML = "";
+            for(var line = 0; line < lines.length; line++){
+                var userid = lines[line].split(',');
+                if(userid[0] == x && count < 5) {
+                    count++;
+                    var node = document.createElement("LI");
+                    var textnode = document.createTextNode(userid[2]);
+                    node.appendChild(textnode);
+                    document.getElementById("myList").appendChild(node);
+                }
+            }
+        }
+    </script>
+</body>
+</html>
